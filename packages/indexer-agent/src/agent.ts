@@ -126,7 +126,7 @@ class Agent {
   allocateOnNetworkSubgraph: boolean
   registerIndexer: boolean
   offchainSubgraphs: SubgraphDeploymentID[]
-  receiptCollector: ReceiptCollector
+  // receiptCollector: ReceiptCollector
 
   constructor(
     logger: Logger,
@@ -138,7 +138,7 @@ class Agent {
     allocateOnNetworkSubgraph: boolean,
     registerIndexer: boolean,
     offchainSubgraphs: SubgraphDeploymentID[],
-    receiptCollector: ReceiptCollector,
+    // receiptCollector: ReceiptCollector,
   ) {
     this.logger = logger.child({ component: 'Agent' })
     this.metrics = metrics
@@ -149,7 +149,7 @@ class Agent {
     this.allocateOnNetworkSubgraph = allocateOnNetworkSubgraph
     this.registerIndexer = registerIndexer
     this.offchainSubgraphs = offchainSubgraphs
-    this.receiptCollector = receiptCollector
+    // this.receiptCollector = receiptCollector
   }
 
   async start(): Promise<Agent> {
@@ -889,7 +889,7 @@ export const startAgent = async (config: AgentConfig): Promise<Agent> => {
     config.allocateOnNetworkSubgraph,
     config.registerIndexer,
     config.offchainSubgraphs,
-    config.receiptCollector,
+    // config.receiptCollector,
   )
   return await agent.start()
 }

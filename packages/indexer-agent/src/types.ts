@@ -17,5 +17,5 @@ export interface AgentConfig {
   allocateOnNetworkSubgraph: boolean
   registerIndexer: boolean
   offchainSubgraphs: SubgraphDeploymentID[]
-  receiptCollector: ReceiptCollector
+  // receiptCollector: ReceiptCollector
 }

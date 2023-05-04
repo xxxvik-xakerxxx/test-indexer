@@ -220,31 +220,31 @@ export default {
     logger.info('Starting up...', { version: pkg.version, deps: pkg.bundledDependencies })
 
     // Enable Google Cloud profiling if enabled
-    if (argv.gcloudProfiling) {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        require('@google-cloud/profiler').start({
-          serviceContext: {
-            service: pkg.name.split('/').pop(),
-            version: pkg.version,
-          },
-        })
-      } catch (err) {
-        logger.warn(`Failed to enable Google Cloud profiling, skipping`, { err })
-      }
-    }
+    // if (argv.gcloudProfiling) {
+    //   try {
+    //     // eslint-disable-next-line @typescript-eslint/no-var-requires
+    //     require('@google-cloud/profiler').start({
+    //       serviceContext: {
+    //         service: pkg.name.split('/').pop(),
+    //         version: pkg.version,
+    //       },
+    //     })
+    //   } catch (err) {
+    //     logger.warn(`Failed to enable Google Cloud profiling, skipping`, { err })
+    //   }
+    // }
 
     // Spin up a metrics server
     const metrics = createMetrics()
-    createMetricsServer({
-      logger: logger.child({ component: 'MetricsServer' }),
-      registry: metrics.registry,
-      port: argv.metricsPort,
-    })
+    // createMetricsServer({
+    //   logger: logger.child({ component: 'MetricsServer' }),
+    //   registry: metrics.registry,
+    //   port: argv.metricsPort,
+    // })
 
     // Register indexer error metrics so we can track any errors that happen
     // inside the service
-    registerIndexerErrorMetrics(metrics)
+    // registerIndexerErrorMetrics(metrics)
 
     const wallet = Wallet.fromMnemonic(argv.mnemonic)
     const indexerAddress = toAddress(argv.indexerAddress)
@@ -386,7 +386,7 @@ export default {
         },
       },
       features: {
-        injectDai: true,
+        injectDai: false,
       },
     })
 

@@ -652,18 +652,18 @@ export default {
       restakeRewards: argv.restakeRewards,
     })
 
-    const receiptCollector = new AllocationReceiptCollector({
-      logger,
-      metrics,
-      transactionManager: network.transactionManager,
-      models: queryFeeModels,
-      // allocationExchange: network.contracts.allocationExchange,
-      collectEndpoint: argv.collectReceiptsEndpoint,
-      voucherRedemptionThreshold: argv.voucherRedemptionThreshold,
-      voucherRedemptionBatchThreshold: argv.voucherRedemptionBatchThreshold,
-      voucherRedemptionMaxBatchSize: argv.voucherRedemptionMaxBatchSize,
-    })
-    await receiptCollector.queuePendingReceiptsFromDatabase()
+    // const receiptCollector = new AllocationReceiptCollector({
+    //   logger,
+    //   metrics,
+    //   transactionManager: network.transactionManager,
+    //   models: queryFeeModels,
+    //   // allocationExchange: network.contracts.allocationExchange,
+    //   collectEndpoint: argv.collectReceiptsEndpoint,
+    //   voucherRedemptionThreshold: argv.voucherRedemptionThreshold,
+    //   voucherRedemptionBatchThreshold: argv.voucherRedemptionBatchThreshold,
+    //   voucherRedemptionMaxBatchSize: argv.voucherRedemptionMaxBatchSize,
+    // })
+    // await receiptCollector.queuePendingReceiptsFromDatabase()
 
     logger.info('Launch indexer management API server')
     const allocationManagementMode =
@@ -689,7 +689,7 @@ export default {
         injectDai: argv.injectDai,
       },
       transactionManager: network.transactionManager,
-      receiptCollector,
+      // receiptCollector,
       networkMonitor,
       // allocationManagementMode,
       // autoAllocationMinBatchSize: argv.autoAllocationMinBatchSize,
@@ -768,7 +768,7 @@ export default {
       offchainSubgraphs: argv.offchainSubgraphs.map(
         (s: string) => new SubgraphDeploymentID(s),
       ),
-      receiptCollector,
+      // receiptCollector,
     })
   },
 }
