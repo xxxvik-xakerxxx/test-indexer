@@ -59,7 +59,7 @@ export interface AllocationReceiptCollectorOptions {
   logger: Logger
   metrics: Metrics
   transactionManager: TransactionManager
-  allocationExchange: Contract
+  // allocationExchange: Contract
   models: QueryFeeModels
   collectEndpoint: string
   voucherRedemptionThreshold: BigNumber
@@ -77,7 +77,7 @@ export class AllocationReceiptCollector implements ReceiptCollector {
   private metrics: ReceiptMetrics
   private models: QueryFeeModels
   private transactionManager: TransactionManager
-  private allocationExchange: Contract
+  // private allocationExchange: Contract
   private collectEndpoint: URL
   private partialVoucherEndpoint: URL
   private voucherEndpoint: URL
@@ -92,7 +92,7 @@ export class AllocationReceiptCollector implements ReceiptCollector {
     transactionManager,
     models,
     collectEndpoint,
-    allocationExchange,
+    // allocationExchange,
     voucherRedemptionThreshold,
     voucherRedemptionBatchThreshold,
     voucherRedemptionMaxBatchSize,
@@ -102,7 +102,7 @@ export class AllocationReceiptCollector implements ReceiptCollector {
     this.transactionManager = transactionManager
     this.models = models
     this.collectEndpoint = new URL(collectEndpoint)
-    this.allocationExchange = allocationExchange
+    // this.allocationExchange = allocationExchange
     this.partialVoucherEndpoint = new URL(
       collectEndpoint.replace('/collect-receipts', '/partial-voucher'),
     )
@@ -255,23 +255,23 @@ export class AllocationReceiptCollector implements ReceiptCollector {
       const vouchers = await pReduce(
         pendingVouchers,
         async (results, voucher) => {
-          if (await this.allocationExchange.allocationsRedeemed(voucher.allocation)) {
-            try {
-              await this.models.vouchers.destroy({
-                where: { allocation: voucher.allocation },
-              })
-              logger.warn(
-                `Query fee voucher for allocation already redeemed, deleted local voucher copy`,
-                { allocation: voucher.allocation },
-              )
-            } catch (err) {
-              logger.warn(`Failed to delete local vouchers copy, will try again later`, {
-                err,
-                allocation: voucher.allocation,
-              })
-            }
-            return results
-          }
+          // if (await this.allocationExchange.allocationsRedeemed(voucher.allocation)) {
+          //   try {
+          //     await this.models.vouchers.destroy({
+          //       where: { allocation: voucher.allocation },
+          //     })
+          //     logger.warn(
+          //       `Query fee voucher for allocation already redeemed, deleted local voucher copy`,
+          //       { allocation: voucher.allocation },
+          //     )
+          //   } catch (err) {
+          //     logger.warn(`Failed to delete local vouchers copy, will try again later`, {
+          //       err,
+          //       allocation: voucher.allocation,
+          //     })
+          //   }
+          //   return results
+          // }
           if (BigNumber.from(voucher.amount).lt(this.voucherRedemptionThreshold)) {
             results.belowThreshold.push(voucher)
           } else {
@@ -501,19 +501,19 @@ export class AllocationReceiptCollector implements ReceiptCollector {
 
     try {
       // Submit the voucher on chain
-      const txReceipt = await this.transactionManager.executeTransaction(
-        () => this.allocationExchange.estimateGas.redeemMany(onchainVouchers),
-        async (gasLimit: BigNumberish) =>
-          this.allocationExchange.redeemMany(onchainVouchers, {
-            gasLimit,
-          }),
-        logger.child({ action: 'redeemMany' }),
-      )
-
-      if (txReceipt === 'paused' || txReceipt === 'unauthorized') {
-        this.metrics.invalidVoucherRedeems.inc({ allocation: vouchers[0].allocation })
-        return
-      }
+      // const txReceipt = await this.transactionManager.executeTransaction(
+      //   () => this.allocationExchange.estimateGas.redeemMany(onchainVouchers),
+      //   async (gasLimit: BigNumberish) =>
+      //     this.allocationExchange.redeemMany(onchainVouchers, {
+      //       gasLimit,
+      //     }),
+      //   logger.child({ action: 'redeemMany' }),
+      // )
+      //
+      // if (txReceipt === 'paused' || txReceipt === 'unauthorized') {
+      //   this.metrics.invalidVoucherRedeems.inc({ allocation: vouchers[0].allocation })
+      //   return
+      // }
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       await this.models.allocationSummaries.sequelize!.transaction(

@@ -25,8 +25,8 @@ import gql from 'graphql-tag'
 export class TransactionManager {
   ethereum: providers.BaseProvider
   wallet: Wallet
-  paused: Eventual<boolean>
-  isOperator: Eventual<boolean>
+  // paused: Eventual<boolean>
+  // isOperator: Eventual<boolean>
   gasIncreaseTimeout: number
   gasIncreaseFactor: BigNumber
   baseFeePerGasMax: number
@@ -35,8 +35,8 @@ export class TransactionManager {
   constructor(
     ethereum: providers.BaseProvider,
     wallet: Wallet,
-    paused: Eventual<boolean>,
-    isOperator: Eventual<boolean>,
+    // paused: Eventual<boolean>,
+    // isOperator: Eventual<boolean>,
     gasIncreaseTimeout: number,
     gasIncreaseFactor: number,
     baseFeePerGasMax: number,
@@ -44,8 +44,8 @@ export class TransactionManager {
   ) {
     this.ethereum = ethereum
     this.wallet = wallet
-    this.paused = paused
-    this.isOperator = isOperator
+    // this.paused = paused
+    // this.isOperator = isOperator
     this.gasIncreaseTimeout = gasIncreaseTimeout
     this.gasIncreaseFactor = utils.parseUnits(gasIncreaseFactor.toString(), 3)
     this.baseFeePerGasMax = baseFeePerGasMax
@@ -57,15 +57,15 @@ export class TransactionManager {
     transaction: (gasLimit: BigNumberish) => Promise<ContractTransaction>,
     logger: Logger,
   ): Promise<ContractReceipt | 'paused' | 'unauthorized'> {
-    if (await this.paused.value()) {
-      logger.info(`Network is paused, skipping this action`)
-      return 'paused'
-    }
-
-    if (!(await this.isOperator.value())) {
-      logger.info(`Not authorized as an operator for indexer, skipping this action`)
-      return 'unauthorized'
-    }
+    // if (await this.paused.value()) {
+    //   logger.info(`Network is paused, skipping this action`)
+    //   return 'paused'
+    // }
+    //
+    // if (!(await this.isOperator.value())) {
+    //   logger.info(`Not authorized as an operator for indexer, skipping this action`)
+    //   return 'unauthorized'
+    // }
 
     let pending = true
     let output: providers.TransactionReceipt | undefined = undefined

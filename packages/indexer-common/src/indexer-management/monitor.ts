@@ -37,7 +37,7 @@ import pRetry from 'p-retry'
 export class NetworkMonitor {
   constructor(
     public networkCAIPID: string,
-    private contracts: NetworkContracts,
+    // private contracts: NetworkContracts,
     private indexer: Address,
     private logger: Logger,
     private indexingStatusResolver: IndexingStatusResolver,
@@ -47,11 +47,13 @@ export class NetworkMonitor {
   ) {}
 
   async currentEpochNumber(): Promise<number> {
-    return (await this.contracts.epochManager.currentEpoch()).toNumber()
+    // return (await this.contracts.epochManager.currentEpoch()).toNumber()
+    return 1;
   }
 
   async maxAllocationEpoch(): Promise<number> {
-    return await this.contracts.staking.maxAllocationEpochs()
+    // return await this.contracts.staking.maxAllocationEpochs()
+    return 1;
   }
 
   async allocation(allocationID: string): Promise<Allocation> {

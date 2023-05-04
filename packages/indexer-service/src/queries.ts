@@ -16,8 +16,8 @@ export interface PaidQueryProcessorOptions {
   logger: Logger
   metrics: Metrics
   graphNode: string
-  signers: Eventual<AttestationSignerMap>
-  receiptManager: ReceiptManager
+  // signers: Eventual<AttestationSignerMap>
+  // receiptManager: ReceiptManager
   queryTimingLogs: boolean
 }
 
@@ -34,22 +34,22 @@ export class QueryProcessor implements QueryProcessorInterface {
   logger: Logger
   metrics: Metrics
   graphNode: AxiosInstance
-  signers: Eventual<AttestationSignerMap>
-  receiptManager: ReceiptManager
+  // signers: Eventual<AttestationSignerMap>
+  // receiptManager: ReceiptManager
   queryTimingLogs: boolean
 
   constructor({
     logger,
     metrics,
     graphNode,
-    receiptManager,
-    signers,
+    // receiptManager,
+    // signers,
     queryTimingLogs,
   }: PaidQueryProcessorOptions) {
     this.logger = logger
     this.queryTimingLogs = queryTimingLogs
     this.metrics = metrics
-    this.signers = signers
+    // this.signers = signers
     this.graphNode = axios.create({
       baseURL: graphNode,
 
@@ -92,7 +92,7 @@ export class QueryProcessor implements QueryProcessorInterface {
       )
     }
 
-    this.receiptManager = receiptManager
+    // this.receiptManager = receiptManager
   }
 
   async executeFreeQuery(query: FreeQuery): Promise<Response<UnattestedQueryResult>> {
@@ -114,56 +114,56 @@ export class QueryProcessor implements QueryProcessorInterface {
   }
 
   async executePaidQuery(paidQuery: PaidQuery): Promise<Response<QueryResult>> {
-    const { subgraphDeploymentID, receipt, query } = paidQuery
-
-    this.logger.info(`Execute paid query`, {
-      deployment: subgraphDeploymentID.display,
-      receipt,
-    })
-
-    const parsedReceipt = await this.receiptManager.add(receipt)
-
-    // Look up or derive a signer for the attestation for this query
-    const signer = (await this.signers.value()).get(parsedReceipt.allocation)
-
-    // Fail query outright if we have no signer for this attestation
-    if (signer === undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const error = Error(`Unable to sign the query response attestation`) as any
-      error.status = 500
-      throw error
-    }
-
-    let response: AxiosResponse<string>
-    try {
-      response = await this.graphNode.post<string>(
-        `/subgraphs/id/${subgraphDeploymentID.ipfsHash}`,
-        query,
-      )
-    } catch (error) {
-      error.status = 500
-      throw error
-    }
-
-    let attestation = null
-    if (response.headers['graph-attestable'] == 'true') {
-      attestation = await signer.createAttestation(query, response.data)
-    }
-
-    if (this.queryTimingLogs) {
-      this.logger.info('Done executing paid query', {
-        deployment: subgraphDeploymentID.ipfsHash,
-        fees: parsedReceipt.fees.toBigInt().toString(),
-        query: query,
-        responseTime: (response as AxiosResponseWithTime).responseTime ?? null,
-      })
-    }
-
+    //   const { subgraphDeploymentID, receipt, query } = paidQuery
+    //
+    //   this.logger.info(`Execute paid query`, {
+    //     deployment: subgraphDeploymentID.display,
+    //     receipt,
+    //   })
+    //
+    //   const parsedReceipt = await this.receiptManager.add(receipt)
+    //
+    //   // Look up or derive a signer for the attestation for this query
+    //   const signer = (await this.signers.value()).get(parsedReceipt.allocation)
+    //
+    //   // Fail query outright if we have no signer for this attestation
+    //   if (signer === undefined) {
+    //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //     const error = Error(`Unable to sign the query response attestation`) as any
+    //     error.status = 500
+    //     throw error
+    //   }
+    //
+    //   let response: AxiosResponse<string>
+    //   try {
+    //     response = await this.graphNode.post<string>(
+    //       `/subgraphs/id/${subgraphDeploymentID.ipfsHash}`,
+    //       query,
+    //     )
+    //   } catch (error) {
+    //     error.status = 500
+    //     throw error
+    //   }
+    //
+    //   let attestation = null
+    //   if (response.headers['graph-attestable'] == 'true') {
+    //     attestation = await signer.createAttestation(query, response.data)
+    //   }
+    //
+    //   if (this.queryTimingLogs) {
+    //     this.logger.info('Done executing paid query', {
+    //       deployment: subgraphDeploymentID.ipfsHash,
+    //       fees: parsedReceipt.fees.toBigInt().toString(),
+    //       query: query,
+    //       responseTime: (response as AxiosResponseWithTime).responseTime ?? null,
+    //     })
+    //   }
+    //
     return {
       status: 200,
       result: {
-        graphQLResponse: response.data,
-        attestation,
+        graphQLResponse: '',
+        attestation: null,
       },
     }
   }

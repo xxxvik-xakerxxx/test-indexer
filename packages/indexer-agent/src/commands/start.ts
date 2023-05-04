@@ -532,28 +532,28 @@ export default {
     wallet = wallet.connect(networkProvider)
     logger.info(`Connected wallet`)
 
-    let contracts = undefined
-    try {
-      contracts = await connectContracts(wallet, networkMeta.chainId)
-    } catch (err) {
-      logger.error(
-        `Failed to connect to contracts, please ensure you are using the intended Ethereum network`,
-        {
-          err,
-        },
-      )
-      process.exit(1)
-    }
-    logger.info(`Successfully connected to contracts`, {
-      curation: contracts.curation.address,
-      disputeManager: contracts.disputeManager.address,
-      epochManager: contracts.epochManager.address,
-      gns: contracts.gns.address,
-      rewardsManager: contracts.rewardsManager.address,
-      serviceRegistry: contracts.serviceRegistry.address,
-      staking: contracts.staking.address,
-      token: contracts.token.address,
-    })
+    // let contracts = undefined
+    // try {
+    //   contracts = await connectContracts(wallet, networkMeta.chainId)
+    // } catch (err) {
+    //   logger.error(
+    //     `Failed to connect to contracts, please ensure you are using the intended Ethereum network`,
+    //     {
+    //       err,
+    //     },
+    //   )
+    //   process.exit(1)
+    // }
+    // logger.info(`Successfully connected to contracts`, {
+    //   curation: contracts.curation.address,
+    //   disputeManager: contracts.disputeManager.address,
+    //   epochManager: contracts.epochManager.address,
+    //   gns: contracts.gns.address,
+    //   rewardsManager: contracts.rewardsManager.address,
+    //   serviceRegistry: contracts.serviceRegistry.address,
+    //   staking: contracts.staking.address,
+    //   token: contracts.token.address,
+    // })
 
     const indexerAddress = toAddress(argv.indexerAddress)
 
@@ -561,7 +561,7 @@ export default {
 
     const networkMonitor = new NetworkMonitor(
       resolveChainId(networkMeta.chainId),
-      contracts,
+      // contracts,
       toAddress(indexerAddress),
       logger.child({ component: 'NetworkMonitor' }),
       indexingStatusResolver,
@@ -631,7 +631,7 @@ export default {
     const network = await Network.create(
       logger,
       networkProvider,
-      contracts,
+      // contracts,
       wallet,
       indexerAddress,
       argv.publicIndexerUrl,
@@ -657,7 +657,7 @@ export default {
       metrics,
       transactionManager: network.transactionManager,
       models: queryFeeModels,
-      allocationExchange: network.contracts.allocationExchange,
+      // allocationExchange: network.contracts.allocationExchange,
       collectEndpoint: argv.collectReceiptsEndpoint,
       voucherRedemptionThreshold: argv.voucherRedemptionThreshold,
       voucherRedemptionBatchThreshold: argv.voucherRedemptionBatchThreshold,
@@ -673,7 +673,7 @@ export default {
     const indexerManagementClient = await createIndexerManagementClient({
       models: managementModels,
       address: indexerAddress,
-      contracts,
+      // contracts,
       indexingStatusResolver,
       indexNodeIDs: argv.indexNodeIds,
       deploymentManagementEndpoint: argv.graphNodeAdminEndpoint,
@@ -691,8 +691,8 @@ export default {
       transactionManager: network.transactionManager,
       receiptCollector,
       networkMonitor,
-      allocationManagementMode,
-      autoAllocationMinBatchSize: argv.autoAllocationMinBatchSize,
+      // allocationManagementMode,
+      // autoAllocationMinBatchSize: argv.autoAllocationMinBatchSize,
     })
 
     await createIndexerManagementServer({
@@ -749,7 +749,7 @@ export default {
     startCostModelAutomation({
       logger,
       ethereum: networkProvider,
-      contracts: network.contracts,
+      // contracts: network.contracts,
       indexerManagement: indexerManagementClient,
       injectDai: argv.injectDai,
       daiContractAddress: toAddress(argv.daiContract),

@@ -327,12 +327,12 @@ export default {
       token: contracts.token.address,
     })
 
-    const receiptManager = new AllocationReceiptManager(
-      sequelize,
-      queryFeeModels,
-      logger,
-      toAddress(argv.clientSignerAddress),
-    )
+    // const receiptManager = new AllocationReceiptManager(
+    //   sequelize,
+    //   queryFeeModels,
+    //   logger,
+    //   toAddress(argv.clientSignerAddress),
+    // )
 
     // Ensure the address is checksummed
     const address = toAddress(wallet.address)
@@ -364,15 +364,15 @@ export default {
       logger: logger.child({ component: 'QueryProcessor' }),
       graphNode: argv.graphNodeQueryEndpoint,
       metrics,
-      receiptManager,
-      signers,
+      // receiptManager,
+      // signers,
       queryTimingLogs: argv.queryTimingLogs,
     })
 
     const indexerManagementClient = await createIndexerManagementClient({
       models,
       address,
-      contracts,
+      // contracts,
       indexingStatusResolver,
       indexNodeIDs: ['node_1'], // This is just a dummy since the indexer-service doesn't manage deployments,
       deploymentManagementEndpoint: argv.graphNodeStatusEndpoint,

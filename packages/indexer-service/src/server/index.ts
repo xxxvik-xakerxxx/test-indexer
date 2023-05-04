@@ -188,12 +188,12 @@ export const createApp = async ({
   )
 
   // Endpoint for the public cost API
-  app.use(
-    '/cost',
-    slowLimiter,
-    bodyParser.json(),
-    await createCostServer({ indexerManagementClient, metrics }),
-  )
+  // app.use(
+  //   '/cost',
+  //   slowLimiter,
+  //   bodyParser.json(),
+  //   await createCostServer({ indexerManagementClient, metrics }),
+  // )
 
   // Endpoint for operator information
   app.use(
@@ -253,95 +253,93 @@ export const createApp = async ({
       })
       serverMetrics.queries.inc({ deployment: subgraphDeploymentID.ipfsHash })
 
+      // try {
+      // Extract the receipt
+      // const receipt = req.headers['scalar-receipt']
+      // if (receipt !== undefined && typeof receipt !== 'string') {
+      //   logger.info(`Query has invalid receipt`, {
+      //     deployment: subgraphDeploymentID.display,
+      //     receipt,
+      //   })
+      //   serverMetrics.queriesWithInvalidReceiptHeader.inc({
+      //     deployment: subgraphDeploymentID.ipfsHash,
+      //   })
+      //   const err = indexerError(IndexerErrorCode.IE029)
+      //   return res
+      //     .status(402)
+      //     .contentType('application/json')
+      //     .send({ error: err.message })
+      // }
+
+      // Trusted indexer scenario: if the sender provides the free
+      // query auth token, we do not require a receipt
+
+      // if (freeQueryAuthValue && req.headers['authorization'] === freeQueryAuthValue) {
+      //   receiptRequired = false
+      // }
+
+      // if (receiptRequired) {
+      // Regular scenario: a receipt is required; fail if no state channel
+      // is specified
+      // if (receipt === undefined) {
+      //   logger.info(`Query is missing a receipt`, {
+      //     deployment: subgraphDeploymentID.display,
+      //   })
+      //   serverMetrics.queriesWithoutReceipt.inc({
+      //     deployment: subgraphDeploymentID.ipfsHash,
+      //   })
+      //   const err = indexerError(IndexerErrorCode.IE030)
+      //   return res
+      //     .status(402)
+      //     .contentType('application/json')
+      //     .send({ error: err.message })
+      // }
+
+      // logger.info(`Received paid query`, {
+      //   deployment: subgraphDeploymentID.display,
+      //   receipt: receipt,
+      // })
+
+      // try {
+      //   const response = await queryProcessor.executePaidQuery({
+      //     subgraphDeploymentID,
+      //     receipt,
+      //     query,
+      //   })
+      //   serverMetrics.successfulQueries.inc({
+      //     deployment: subgraphDeploymentID.ipfsHash,
+      //   })
+      //   res
+      //     .status(response.status || 200)
+      //     .contentType('application/json')
+      //     .send(response.result)
+      // } catch (error) {
+      //   const err = indexerError(IndexerErrorCode.IE032, error)
+      //   logger.error(`Failed to handle paid query`, { err })
+      //   serverMetrics.failedQueries.inc({ deployment: subgraphDeploymentID.ipfsHash })
+      //   res = res.status(error.status || 500).contentType('application/json')
+      //   res.send({ error: `${err.message}` })
+      // }
+      // } else {
+      logger.info(`Received free query`, { deployment: subgraphDeploymentID.display })
+
       try {
-        // Extract the receipt
-        const receipt = req.headers['scalar-receipt']
-        if (receipt !== undefined && typeof receipt !== 'string') {
-          logger.info(`Query has invalid receipt`, {
-            deployment: subgraphDeploymentID.display,
-            receipt,
-          })
-          serverMetrics.queriesWithInvalidReceiptHeader.inc({
-            deployment: subgraphDeploymentID.ipfsHash,
-          })
-          const err = indexerError(IndexerErrorCode.IE029)
-          return res
-            .status(402)
-            .contentType('application/json')
-            .send({ error: err.message })
-        }
-
-        // Trusted indexer scenario: if the sender provides the free
-        // query auth token, we do not require a receipt
-        let receiptRequired = true
-        if (freeQueryAuthValue && req.headers['authorization'] === freeQueryAuthValue) {
-          receiptRequired = false
-        }
-
-        if (receiptRequired) {
-          // Regular scenario: a receipt is required; fail if no state channel
-          // is specified
-          if (receipt === undefined) {
-            logger.info(`Query is missing a receipt`, {
-              deployment: subgraphDeploymentID.display,
-            })
-            serverMetrics.queriesWithoutReceipt.inc({
-              deployment: subgraphDeploymentID.ipfsHash,
-            })
-            const err = indexerError(IndexerErrorCode.IE030)
-            return res
-              .status(402)
-              .contentType('application/json')
-              .send({ error: err.message })
-          }
-
-          logger.info(`Received paid query`, {
-            deployment: subgraphDeploymentID.display,
-            receipt: receipt,
-          })
-
-          try {
-            const response = await queryProcessor.executePaidQuery({
-              subgraphDeploymentID,
-              receipt,
-              query,
-            })
-            serverMetrics.successfulQueries.inc({
-              deployment: subgraphDeploymentID.ipfsHash,
-            })
-            res
-              .status(response.status || 200)
-              .contentType('application/json')
-              .send(response.result)
-          } catch (error) {
-            const err = indexerError(IndexerErrorCode.IE032, error)
-            logger.error(`Failed to handle paid query`, { err })
-            serverMetrics.failedQueries.inc({ deployment: subgraphDeploymentID.ipfsHash })
-            res = res.status(error.status || 500).contentType('application/json')
-            res.send({ error: `${err.message}` })
-          }
-        } else {
-          logger.info(`Received free query`, { deployment: subgraphDeploymentID.display })
-
-          try {
-            const response = await queryProcessor.executeFreeQuery({
-              subgraphDeploymentID,
-              query,
-            })
-            res
-              .status(response.status || 200)
-              .contentType('application/json')
-              .setHeader('graph-attestable', response.result.attestable.toString())
-              .send({ graphQLResponse: response.result.graphQLResponse })
-          } catch (error) {
-            const err = indexerError(IndexerErrorCode.IE033, error)
-            logger.error(`Failed to handle free query`, { err })
-            res
-              .status(error.status || 500)
-              .contentType('application/json')
-              .send({ error: `${err.message}` })
-          }
-        }
+        const response = await queryProcessor.executeFreeQuery({
+          subgraphDeploymentID,
+          query,
+        })
+        res
+          .status(response.status || 200)
+          .contentType('application/json')
+          .setHeader('graph-attestable', response.result.attestable.toString())
+          .send({ graphQLResponse: response.result.graphQLResponse })
+      } catch (error) {
+        const err = indexerError(IndexerErrorCode.IE033, error)
+        logger.error(`Failed to handle free query`, { err })
+        res
+          .status(error.status || 500)
+          .contentType('application/json')
+          .send({ error: `${err.message}` })
       } finally {
         stopQueryTimer()
       }

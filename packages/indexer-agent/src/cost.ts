@@ -33,7 +33,7 @@ const registerMetrics = (metrics: Metrics): CostModelAutomationMetrics => ({
 export interface CostModelAutomationOptions {
   logger: Logger
   ethereum: providers.BaseProvider
-  contracts: NetworkContracts
+  // contracts: NetworkContracts
   indexerManagement: IndexerManagementClient
   injectDai: boolean
   daiContractAddress: Address
@@ -43,7 +43,7 @@ export interface CostModelAutomationOptions {
 export const startCostModelAutomation = ({
   logger,
   ethereum,
-  contracts,
+  // contracts,
   indexerManagement,
   injectDai,
   daiContractAddress,
@@ -53,16 +53,16 @@ export const startCostModelAutomation = ({
 
   const automationMetrics = registerMetrics(metrics)
 
-  if (injectDai) {
-    monitorAndInjectDai({
-      logger,
-      ethereum,
-      contracts,
-      indexerManagement,
-      metrics: automationMetrics,
-      daiContractAddress,
-    })
-  }
+  // if (injectDai) {
+  //   monitorAndInjectDai({
+  //     logger,
+  //     ethereum,
+  //     // contracts,
+  //     indexerManagement,
+  //     metrics: automationMetrics,
+  //     daiContractAddress,
+  //   })
+  // }
 }
 
 const ERC20_ABI = ['function decimals() view returns (uint8)']
@@ -70,7 +70,7 @@ const ERC20_ABI = ['function decimals() view returns (uint8)']
 const monitorAndInjectDai = async ({
   logger,
   ethereum,
-  contracts,
+  // contracts,
   indexerManagement,
   metrics,
   daiContractAddress,
@@ -83,20 +83,19 @@ const monitorAndInjectDai = async ({
   const decimals = await stableCoin.decimals()
 
   const DAI = new Token(chainId, daiContractAddress, decimals)
-  const GRT = new Token(chainId, contracts.token.address, 18)
+  // const GRT = new Token(chainId, contracts.token.address, 18)
 
   // Update the GRT per DAI conversion rate every 15 minutes
   timer(15 * 60 * 1000).pipe(async () => {
-    const pair = await Fetcher.fetchPairData(GRT, DAI, ethereum)
-    const route = new Route([pair], DAI)
-    const grtPerDai = route.midPrice.toSignificant(18)
-    const daiPerGrt = route.midPrice.invert().toSignificant(18)
-
+    // const pair = await Fetcher.fetchPairData(GRT, DAI, ethereum)
+    // const route = new Route([pair], DAI)
+    // const grtPerDai = route.midPrice.toSignificant(18)
+    // const daiPerGrt = route.midPrice.invert().toSignificant(18)
     // Observe conversion rate in metrics
-    metrics.daiPerGrt.set(parseFloat(daiPerGrt))
-    metrics.grtPerDai.set(parseFloat(grtPerDai))
-
-    logger.info('Update $DAI variable', { value: grtPerDai })
-    await indexerManagement.setDai(grtPerDai)
+    // metrics.daiPerGrt.set(parseFloat(daiPerGrt))
+    // metrics.grtPerDai.set(parseFloat(grtPerDai))
+    //
+    // logger.info('Update $DAI variable', { value: grtPerDai })
+    // await indexerManagement.setDai(grtPerDai)
   })
 }

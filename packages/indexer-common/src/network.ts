@@ -42,7 +42,7 @@ interface IndexerConfig {
 export class Network {
   logger: Logger
   networkSubgraph: NetworkSubgraph
-  contracts: NetworkContracts
+  // contracts: NetworkContracts
   indexerAddress: Address
   ethereum: providers.StaticJsonRpcProvider
   transactionManager: TransactionManager
@@ -56,11 +56,11 @@ export class Network {
     indexerAddress: Address,
     indexerUrl: string,
     geoCoordinates: [string, string],
-    contracts: NetworkContracts,
+    // contracts: NetworkContracts,
     networkSubgraph: NetworkSubgraph,
     ethereum: providers.StaticJsonRpcProvider,
-    paused: Eventual<boolean>,
-    isOperator: Eventual<boolean>,
+    // paused: Eventual<boolean>,
+    // isOperator: Eventual<boolean>,
     restakeRewards: boolean,
     rebateClaimThreshold: BigNumber,
     rebateClaimBatchThreshold: BigNumber,
@@ -76,7 +76,7 @@ export class Network {
     this.indexerAddress = indexerAddress
     this.indexerUrl = indexerUrl
     this.indexerGeoCoordinates = geoCoordinates
-    this.contracts = contracts
+    // this.contracts = contracts
     this.networkSubgraph = networkSubgraph
     this.ethereum = ethereum
     this.indexerConfigs = {
@@ -93,8 +93,8 @@ export class Network {
     this.transactionManager = new TransactionManager(
       ethereum,
       wallet,
-      paused,
-      isOperator,
+      // paused,
+      // isOperator,
       gasIncreaseTimeout,
       gasIncreaseFactor,
       baseFeePerGasMax,
@@ -105,7 +105,7 @@ export class Network {
   static async create(
     parentLogger: Logger,
     ethereum: providers.StaticJsonRpcProvider,
-    contracts: NetworkContracts,
+    // contracts: NetworkContracts,
     wallet: Wallet,
     indexerAddress: Address,
     indexerUrl: string,
@@ -128,8 +128,8 @@ export class Network {
       operator: wallet.address,
     })
 
-    const paused = await monitorNetworkPauses(logger, contracts, networkSubgraph)
-    const isOperator = await monitorIsOperator(logger, contracts, indexerAddress, wallet)
+    // const paused = await monitorNetworkPauses(logger, contracts, networkSubgraph)
+    // const isOperator = await monitorIsOperator(logger, contracts, indexerAddress, wallet)
 
     return new Network(
       logger,
@@ -137,11 +137,11 @@ export class Network {
       indexerAddress,
       indexerUrl,
       geoCoordinates,
-      contracts,
+      // contracts,
       networkSubgraph,
       ethereum,
-      paused,
-      isOperator,
+      // paused,
+      // isOperator,
       restakeRewards,
       rebateClaimThreshold,
       rebateClaimBatchThreshold,
@@ -512,69 +512,69 @@ export class Network {
       geoHash,
     })
 
-    await pRetry(
-      async () => {
-        try {
-          logger.info(`Register indexer`)
-
-          // Register the indexer (only if it hasn't been registered yet or
-          // if its URL is different from what is registered on chain)
-          const isRegistered = await this.contracts.serviceRegistry.isRegistered(
-            this.indexerAddress,
-          )
-          if (isRegistered) {
-            const service = await this.contracts.serviceRegistry.services(
-              this.indexerAddress,
-            )
-            if (service.url === this.indexerConfigs.url && service.geohash === geoHash) {
-              if (await this.transactionManager.isOperator.value()) {
-                logger.info(`Indexer already registered, operator status already granted`)
-                return
-              } else {
-                logger.info(`Indexer already registered, operator status not yet granted`)
-              }
-            }
-          }
-          const receipt = await this.transactionManager.executeTransaction(
-            () =>
-              this.contracts.serviceRegistry.estimateGas.registerFor(
-                this.indexerAddress,
-                this.indexerConfigs.url,
-                geoHash,
-              ),
-            (gasLimit) =>
-              this.contracts.serviceRegistry.registerFor(
-                this.indexerAddress,
-                this.indexerConfigs.url,
-                geoHash,
-                {
-                  gasLimit,
-                },
-              ),
-            logger.child({ function: 'serviceRegistry.registerFor' }),
-          )
-          if (receipt === 'paused' || receipt === 'unauthorized') {
-            return
-          }
-          const events = receipt.events || receipt.logs
-          const event = events.find((event) =>
-            event.topics.includes(
-              this.contracts.serviceRegistry.interface.getEventTopic('ServiceRegistered'),
-            ),
-          )
-          assert.ok(event)
-
-          logger.info(`Successfully registered indexer`)
-        } catch (error) {
-          const err = indexerError(IndexerErrorCode.IE012, error)
-          logger.error(INDEXER_ERROR_MESSAGES[IndexerErrorCode.IE012], {
-            err,
-          })
-          throw error
-        }
-      },
-      { retries: 5 } as pRetry.Options,
-    )
+    // await pRetry(
+    //   async () => {
+    //     try {
+    //       logger.info(`Register indexer`)
+    //
+    //       // Register the indexer (only if it hasn't been registered yet or
+    //       // if its URL is different from what is registered on chain)
+    //       const isRegistered = await this.contracts.serviceRegistry.isRegistered(
+    //         this.indexerAddress,
+    //       )
+    //       if (isRegistered) {
+    //         const service = await this.contracts.serviceRegistry.services(
+    //           this.indexerAddress,
+    //         )
+    //         if (service.url === this.indexerConfigs.url && service.geohash === geoHash) {
+    //           if (await this.transactionManager.isOperator.value()) {
+    //             logger.info(`Indexer already registered, operator status already granted`)
+    //             return
+    //           } else {
+    //             logger.info(`Indexer already registered, operator status not yet granted`)
+    //           }
+    //         }
+    //       }
+    //       const receipt = await this.transactionManager.executeTransaction(
+    //         () =>
+    //           this.contracts.serviceRegistry.estimateGas.registerFor(
+    //             this.indexerAddress,
+    //             this.indexerConfigs.url,
+    //             geoHash,
+    //           ),
+    //         (gasLimit) =>
+    //           this.contracts.serviceRegistry.registerFor(
+    //             this.indexerAddress,
+    //             this.indexerConfigs.url,
+    //             geoHash,
+    //             {
+    //               gasLimit,
+    //             },
+    //           ),
+    //         logger.child({ function: 'serviceRegistry.registerFor' }),
+    //       )
+    //       if (receipt === 'paused' || receipt === 'unauthorized') {
+    //         return
+    //       }
+    //       const events = receipt.events || receipt.logs
+    //       const event = events.find((event) =>
+    //         event.topics.includes(
+    //           this.contracts.serviceRegistry.interface.getEventTopic('ServiceRegistered'),
+    //         ),
+    //       )
+    //       assert.ok(event)
+    //
+    //       logger.info(`Successfully registered indexer`)
+    //     } catch (error) {
+    //       const err = indexerError(IndexerErrorCode.IE012, error)
+    //       logger.error(INDEXER_ERROR_MESSAGES[IndexerErrorCode.IE012], {
+    //         err,
+    //       })
+    //       throw error
+    //     }
+    //   },
+    //   { retries: 5 } as pRetry.Options,
+    // )
   }
 
   async claimMany(allocations: Allocation[]): Promise<boolean> {
@@ -607,17 +607,17 @@ export class Network {
         //     enum AllocationState { Null, Active, Closed, Finalized, Claimed }
         //
         // in the contracts.
-        const state = await this.contracts.staking.getAllocationState(allocation.id)
-        if (state === 4) {
-          logger.trace(
-            `Allocation rebate rewards already claimed, ignoring ${allocation.id}.`,
-          )
-          return false
-        }
-        if (state === 1) {
-          logger.trace(`Allocation still active, ignoring ${allocation.id}.`)
-          return false
-        }
+        // const state = await this.contracts.staking.getAllocationState(allocation.id)
+        // if (state === 4) {
+        //   logger.trace(
+        //     `Allocation rebate rewards already claimed, ignoring ${allocation.id}.`,
+        //   )
+        //   return false
+        // }
+        // if (state === 1) {
+        //   logger.trace(`Allocation still active, ignoring ${allocation.id}.`)
+        //   return false
+        // }
         return true
       })
 
@@ -653,25 +653,25 @@ export class Network {
       }
 
       // Claim the earned value from the rebate pool, returning it to the indexers stake
-      const receipt = await this.transactionManager.executeTransaction(
-        () =>
-          this.contracts.staking.estimateGas.claimMany(
-            allocationIds,
-            this.indexerConfigs.restakeRewards,
-          ),
-        (gasLimit) =>
-          this.contracts.staking.claimMany(
-            allocationIds,
-            this.indexerConfigs.restakeRewards,
-            {
-              gasLimit,
-            },
-          ),
-        logger.child({ function: 'staking.claimMany' }),
-      )
-      if (receipt === 'paused' || receipt === 'unauthorized') {
-        return false
-      }
+      // const receipt = await this.transactionManager.executeTransaction(
+      //   () =>
+          // this.contracts.staking.estimateGas.claimMany(
+          //   allocationIds,
+          //   this.indexerConfigs.restakeRewards,
+          // ),
+        // (gasLimit) =>
+        //   this.contracts.staking.claimMany(
+        //     allocationIds,
+        //     this.indexerConfigs.restakeRewards,
+        //     {
+        //       gasLimit,
+        //     },
+        //   ),
+        // logger.child({ function: 'staking.claimMany' }),
+      // )
+      // if (receipt === 'paused' || receipt === 'unauthorized') {
+      //   return false
+      // }
       logger.info(`Successfully claimed ${allocationIds.length} allocations`, {
         claimedAllocations: allocationIds,
       })

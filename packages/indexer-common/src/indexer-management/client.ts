@@ -443,7 +443,7 @@ export interface IndexerManagementDefaults {
 export interface IndexerManagementClientOptions {
   models: IndexerManagementModels
   address: string
-  contracts: NetworkContracts
+  // contracts: NetworkContracts
   indexingStatusResolver: IndexingStatusResolver
   indexNodeIDs: string[]
   deploymentManagementEndpoint: string
@@ -455,8 +455,8 @@ export interface IndexerManagementClientOptions {
   transactionManager?: TransactionManager
   receiptCollector?: AllocationReceiptCollector
   networkMonitor?: NetworkMonitor
-  allocationManagementMode?: AllocationManagementMode
-  autoAllocationMinBatchSize?: number
+  // allocationManagementMode?: AllocationManagementMode
+  // autoAllocationMinBatchSize?: number
 }
 
 export class IndexerManagementClient extends Client {
@@ -509,7 +509,7 @@ export const createIndexerManagementClient = async (
   const {
     models,
     address,
-    contracts,
+    // contracts,
     indexingStatusResolver,
     indexNodeIDs,
     deploymentManagementEndpoint,
@@ -520,8 +520,8 @@ export const createIndexerManagementClient = async (
     transactionManager,
     receiptCollector,
     networkMonitor,
-    allocationManagementMode,
-    autoAllocationMinBatchSize,
+    // allocationManagementMode,
+    // autoAllocationMinBatchSize,
   } = options
   const schema = buildSchema(print(SCHEMA_SDL))
   const resolvers = {
@@ -536,35 +536,36 @@ export const createIndexerManagementClient = async (
   const dai: WritableEventual<string> = mutable()
 
   const subgraphManager = new SubgraphManager(deploymentManagementEndpoint, indexNodeIDs)
-  let allocationManager: AllocationManager | undefined = undefined
-  let actionManager: ActionManager | undefined = undefined
+  // let allocationManager: AllocationManager | undefined = undefined
+  // let actionManager: ActionManager | undefined = undefined
+  const actionManager: ActionManager | undefined = undefined
 
-  if (transactionManager && networkMonitor) {
-    if (receiptCollector) {
-      // TODO: AllocationManager construction inside ActionManager
-      allocationManager = new AllocationManager(
-        contracts,
-        logger.child({ component: 'AllocationManager' }),
-        address,
-        models,
-        networkMonitor,
-        receiptCollector,
-        subgraphManager,
-        transactionManager,
-      )
-      actionManager = new ActionManager(
-        allocationManager,
-        networkMonitor,
-        logger.child({ component: 'ActionManager' }),
-        models,
-        allocationManagementMode,
-        autoAllocationMinBatchSize,
-      )
-
-      logger.info('Begin monitoring the queue for approved actions to execute')
-      await actionManager.monitorQueue()
-    }
-  }
+  // if (transactionManager && networkMonitor) {
+  //   if (receiptCollector) {
+  //     // TODO: AllocationManager construction inside ActionManager
+  //     allocationManager = new AllocationManager(
+  //       contracts,
+  //       logger.child({ component: 'AllocationManager' }),
+  //       address,
+  //       models,
+  //       networkMonitor,
+  //       receiptCollector,
+  //       subgraphManager,
+  //       transactionManager,
+  //     )
+  //     actionManager = new ActionManager(
+  //       allocationManager,
+  //       networkMonitor,
+  //       logger.child({ component: 'ActionManager' }),
+  //       models,
+  //       allocationManagementMode,
+  //       autoAllocationMinBatchSize,
+  //     )
+  //
+  //     logger.info('Begin monitoring the queue for approved actions to execute')
+  //     await actionManager.monitorQueue()
+  //   }
+  // }
 
   const exchange = executeExchange({
     schema,
@@ -572,7 +573,7 @@ export const createIndexerManagementClient = async (
     context: {
       models,
       address,
-      contracts,
+      // contracts,
       indexingStatusResolver,
       subgraphManager,
       networkMonitor,

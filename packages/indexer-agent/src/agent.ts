@@ -172,25 +172,25 @@ class Agent {
       },
     )
 
-    const channelDisputeEpochs = timer(600_000).tryMap(
-      () => this.network.contracts.staking.channelDisputeEpochs(),
-      {
-        onError: error =>
-          this.logger.warn(`Failed to fetch channel dispute epochs`, { error }),
-      },
-    )
+    // const channelDisputeEpochs = timer(600_000).tryMap(
+    //   () => this.network.contracts.staking.channelDisputeEpochs(),
+    //   {
+    //     onError: error =>
+    //       this.logger.warn(`Failed to fetch channel dispute epochs`, { error }),
+    //   },
+    // )
 
-    const maxAllocationEpochs = timer(600_000).tryMap(
-      () => this.network.contracts.staking.maxAllocationEpochs(),
-      {
-        onError: error =>
-          this.logger.warn(`Failed to fetch max allocation epochs`, { error }),
-      },
-    )
+    // const maxAllocationEpochs = timer(600_000).tryMap(
+    //   () => this.network.contracts.staking.maxAllocationEpochs(),
+    //   {
+    //     onError: error =>
+    //       this.logger.warn(`Failed to fetch max allocation epochs`, { error }),
+    //   },
+    // )
 
     const indexingRules = timer(20_000).tryMap(
       async () => {
-        let rules = await this.indexer.indexingRules(true)
+        const rules = await this.indexer.indexingRules(true)
         const subgraphRuleIds = rules
           .filter(
             rule => rule.identifierType == SubgraphIdentifierType.SUBGRAPH,
@@ -199,17 +199,17 @@ class Agent {
         const subgraphsMatchingRules = await this.networkMonitor.subgraphs(
           subgraphRuleIds,
         )
-        if (subgraphsMatchingRules.length >= 1) {
-          const epochLength =
-            await this.network.contracts.epochManager.epochLength()
-          const blockPeriod = 15
-          const bufferPeriod = epochLength.toNumber() * blockPeriod * 100 // 100 epochs
-          rules = convertSubgraphBasedRulesToDeploymentBased(
-            rules,
-            subgraphsMatchingRules,
-            bufferPeriod,
-          )
-        }
+        // if (subgraphsMatchingRules.length >= 1) {
+        //   const epochLength =
+        //     await this.network.contracts.epochManager.epochLength()
+        //   const blockPeriod = 15
+        //   const bufferPeriod = epochLength.toNumber() * blockPeriod * 100 // 100 epochs
+        //   rules = convertSubgraphBasedRulesToDeploymentBased(
+        //     rules,
+        //     subgraphsMatchingRules,
+        //     bufferPeriod,
+        //   )
+        // }
         return rules
       },
       {
@@ -338,21 +338,21 @@ class Agent {
       },
     )
 
-    const claimableAllocations = join({
-      currentEpochNumber,
-      channelDisputeEpochs,
-    }).tryMap(
-      ({ currentEpochNumber, channelDisputeEpochs }) =>
-        this.network.claimableAllocations(
-          currentEpochNumber - channelDisputeEpochs,
-        ),
-      {
-        onError: () =>
-          this.logger.warn(
-            `Failed to obtain claimable allocations, trying again later`,
-          ),
-      },
-    )
+    // const claimableAllocations = join({
+    //   currentEpochNumber,
+    //   channelDisputeEpochs,
+    // }).tryMap(
+    //   ({ currentEpochNumber, channelDisputeEpochs }) =>
+    //     this.network.claimableAllocations(
+    //       currentEpochNumber - channelDisputeEpochs,
+    //     ),
+    //   {
+    //     onError: () =>
+    //       this.logger.warn(
+    //         `Failed to obtain claimable allocations, trying again later`,
+    //       ),
+    //   },
+    // )
     this.logger.info(`Waiting for network data before reconciling every 120s`)
 
     const disputableAllocations = join({
@@ -375,29 +375,29 @@ class Agent {
 
     join({
       ticker: timer(240_000),
-      paused: this.network.transactionManager.paused,
-      isOperator: this.network.transactionManager.isOperator,
+      // paused: this.network.transactionManager.paused,
+      // isOperator: this.network.transactionManager.isOperator,
       currentEpochNumber,
-      maxAllocationEpochs,
+      // maxAllocationEpochs,
       activeDeployments,
       targetDeployments,
       activeAllocations,
       networkDeploymentAllocationDecisions,
       recentlyClosedAllocations,
-      claimableAllocations,
+      // claimableAllocations,
       disputableAllocations,
     }).pipe(
       async ({
-        paused,
-        isOperator,
+        // paused,
+        // isOperator,
         currentEpochNumber,
-        maxAllocationEpochs,
+        // maxAllocationEpochs,
         activeDeployments,
         targetDeployments,
         activeAllocations,
         networkDeploymentAllocationDecisions,
         recentlyClosedAllocations,
-        claimableAllocations,
+        // claimableAllocations,
         disputableAllocations,
       }) => {
         this.logger.info(`Reconcile with the network`, {
@@ -405,25 +405,25 @@ class Agent {
         })
 
         // Do nothing else if the network is paused
-        if (paused) {
-          return this.logger.info(
-            `The network is currently paused, not doing anything until it resumes`,
-          )
-        }
-
-        // Do nothing if we're not authorized as an operator for the indexer
-        if (!isOperator) {
-          return this.logger.error(
-            `Not authorized as an operator for the indexer`,
-            {
-              err: indexerError(IndexerErrorCode.IE034),
-              indexer: toAddress(this.network.indexerAddress),
-              operator: toAddress(
-                this.network.transactionManager.wallet.address,
-              ),
-            },
-          )
-        }
+        // if (paused) {
+        //   return this.logger.info(
+        //     `The network is currently paused, not doing anything until it resumes`,
+        //   )
+        // }
+        //
+        // // Do nothing if we're not authorized as an operator for the indexer
+        // if (!isOperator) {
+        //   return this.logger.error(
+        //     `Not authorized as an operator for the indexer`,
+        //     {
+        //       err: indexerError(IndexerErrorCode.IE034),
+        //       indexer: toAddress(this.network.indexerAddress),
+        //       operator: toAddress(
+        //         this.network.transactionManager.wallet.address,
+        //       ),
+        //     },
+        //   )
+        // }
 
         // Do nothing if there are already approved actions in the queue awaiting execution
         const approvedActions = await this.indexer.fetchActions({
@@ -436,11 +436,11 @@ class Agent {
         }
 
         // Claim rebate pool rewards from finalized allocations
-        try {
-          await this.claimRebateRewards(claimableAllocations)
-        } catch (err) {
-          this.logger.warn(`Failed to claim rebate rewards`, { err })
-        }
+        // try {
+        //   await this.claimRebateRewards(claimableAllocations)
+        // } catch (err) {
+        //   this.logger.warn(`Failed to claim rebate rewards`, { err })
+        // }
 
         try {
           const disputableEpoch =
@@ -462,12 +462,12 @@ class Agent {
           )
 
           // Reconcile allocation actions
-          await this.reconcileActions(
-            networkDeploymentAllocationDecisions,
-            activeAllocations,
-            currentEpochNumber,
-            maxAllocationEpochs,
-          )
+          // await this.reconcileActions(
+          //   networkDeploymentAllocationDecisions,
+          //   activeAllocations,
+          //   currentEpochNumber,
+          //   maxAllocationEpochs,
+          // )
         } catch (err) {
           this.logger.warn(
             `Exited early while reconciling deployments/allocations`,
@@ -734,21 +734,22 @@ class Agent {
     expiredAllocations = await pFilter(
       expiredAllocations,
       async (allocation: Allocation) => {
-        try {
-          const onChainAllocation =
-            await this.network.contracts.staking.getAllocation(allocation.id)
-          return onChainAllocation.closedAtEpoch.eq('0')
-        } catch (err) {
-          this.logger.warn(
-            `Failed to cross-check allocation state with contracts; assuming it needs to be closed`,
-            {
-              deployment: deploymentAllocationDecision.deployment.ipfsHash,
-              allocation: allocation.id,
-              err: indexerError(IndexerErrorCode.IE006, err),
-            },
-          )
+        // try {
+        //   const onChainAllocation =
+        //     await this.network.contracts.staking.getAllocation(allocation.id)
+        //   return onChainAllocation.closedAtEpoch.eq('0')
+        // } catch (err) {
+        //   this.logger.warn(
+        //     `Failed to cross-check allocation state with contracts; assuming it needs to be closed`,
+        //     {
+        //       deployment: deploymentAllocationDecision.deployment.ipfsHash,
+        //       allocation: allocation.id,
+        //       err: indexerError(IndexerErrorCode.IE006, err),
+        //     },
+        //   )
+        //   return true
+        // }
           return true
-        }
       },
     )
     return expiredAllocations
@@ -797,20 +798,20 @@ class Agent {
         }
 
         // Refresh any expiring allocations
-        const expiringAllocations = await this.identifyExpiringAllocations(
-          logger,
-          activeDeploymentAllocations,
-          deploymentAllocationDecision,
-          epoch,
-          maxAllocationEpochs,
-        )
-        if (expiringAllocations.length > 0) {
-          await this.indexer.refreshExpiredAllocations(
-            logger,
-            deploymentAllocationDecision,
-            expiringAllocations,
-          )
-        }
+        // const expiringAllocations = await this.identifyExpiringAllocations(
+        //   logger,
+        //   activeDeploymentAllocations,
+        //   deploymentAllocationDecision,
+        //   epoch,
+        //   maxAllocationEpochs,
+        // )
+        // if (expiringAllocations.length > 0) {
+        //   await this.indexer.refreshExpiredAllocations(
+        //     logger,
+        //     deploymentAllocationDecision,
+        //     expiringAllocations,
+        //   )
+        // }
       }
     }
   }
