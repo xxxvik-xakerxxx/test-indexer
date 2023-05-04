@@ -51,11 +51,11 @@ Build and Publish:
   script:
     - type werf && source $(werf ci-env gitlab --as-file)
     - werf build --report-path=images-report.json
-    - docker pull $(cat images-report.json | jq -r .Images.indexer-agent.DockerImageName)
-    - docker tag $(cat images-report.json | jq -r .Images.indexer-agent.DockerImageName) $IMAGE_NAME_AGENT
+    - docker pull $(cat images-report.json | jq -r .Images.agent.DockerImageName)
+    - docker tag $(cat images-report.json | jq -r .Images.agent.DockerImageName) $IMAGE_NAME_AGENT
     - docker push $IMAGE_NAME_AGENT
-    - docker pull $(cat images-report.json | jq -r .Images.indexer-service.DockerImageName)
-    - docker tag $(cat images-report.json | jq -r .Images.indexer-service.DockerImageName) $IMAGE_NAME_SERVICE
+    - docker pull $(cat images-report.json | jq -r .Images.service.DockerImageName)
+    - docker tag $(cat images-report.json | jq -r .Images.service.DockerImageName) $IMAGE_NAME_SERVICE
     - docker push $IMAGE_NAME_SERVICE
   except: [schedules]
   interruptible: true
