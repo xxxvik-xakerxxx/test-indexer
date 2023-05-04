@@ -303,29 +303,29 @@ export default {
       chainId: network.chainId,
     })
 
-    let contracts = undefined
-    try {
-      contracts = await connectContracts(networkProvider, network.chainId)
-    } catch (error) {
-      logger.error(
-        `Failed to connect to contracts, please ensure you are using the intended Ethereum Network`,
-        {
-          error,
-        },
-      )
-      throw error
-    }
+    // let contracts = undefined
+    // try {
+    //   contracts = await connectContracts(networkProvider, network.chainId)
+    // } catch (error) {
+    //   logger.error(
+    //     `Failed to connect to contracts, please ensure you are using the intended Ethereum Network`,
+    //     {
+    //       error,
+    //     },
+    //   )
+    //   throw error
+    // }
 
-    logger.info('Successfully connected to contracts', {
-      curation: contracts.curation.address,
-      disputeManager: contracts.disputeManager.address,
-      epochManager: contracts.epochManager.address,
-      gns: contracts.gns.address,
-      rewardsManager: contracts.rewardsManager.address,
-      serviceRegistry: contracts.serviceRegistry.address,
-      staking: contracts.staking.address,
-      token: contracts.token.address,
-    })
+    // logger.info('Successfully connected to contracts', {
+    //   curation: contracts.curation.address,
+    //   disputeManager: contracts.disputeManager.address,
+    //   epochManager: contracts.epochManager.address,
+    //   gns: contracts.gns.address,
+    //   rewardsManager: contracts.rewardsManager.address,
+    //   serviceRegistry: contracts.serviceRegistry.address,
+    //   staking: contracts.staking.address,
+    //   token: contracts.token.address,
+    // })
 
     // const receiptManager = new AllocationReceiptManager(
     //   sequelize,
@@ -351,13 +351,13 @@ export default {
     })
 
     // Ensure there is an attestation signer for every allocation
-    const signers = ensureAttestationSigners({
-      logger,
-      allocations,
-      wallet,
-      chainId: network.chainId,
-      disputeManagerAddress: contracts.disputeManager.address,
-    })
+    // const signers = ensureAttestationSigners({
+    //   logger,
+    //   allocations,
+    //   wallet,
+    //   chainId: network.chainId,
+    //   // disputeManagerAddress: contracts.disputeManager.address,
+    // })
 
     // Create a query processor for paid queries
     const queryProcessor = new QueryProcessor({

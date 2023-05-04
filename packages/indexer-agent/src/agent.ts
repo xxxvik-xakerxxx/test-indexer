@@ -749,7 +749,7 @@ class Agent {
         //   )
         //   return true
         // }
-          return true
+        return true
       },
     )
     return expiredAllocations

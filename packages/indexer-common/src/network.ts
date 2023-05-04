@@ -655,19 +655,19 @@ export class Network {
       // Claim the earned value from the rebate pool, returning it to the indexers stake
       // const receipt = await this.transactionManager.executeTransaction(
       //   () =>
-          // this.contracts.staking.estimateGas.claimMany(
-          //   allocationIds,
-          //   this.indexerConfigs.restakeRewards,
-          // ),
-        // (gasLimit) =>
-        //   this.contracts.staking.claimMany(
-        //     allocationIds,
-        //     this.indexerConfigs.restakeRewards,
-        //     {
-        //       gasLimit,
-        //     },
-        //   ),
-        // logger.child({ function: 'staking.claimMany' }),
+      // this.contracts.staking.estimateGas.claimMany(
+      //   allocationIds,
+      //   this.indexerConfigs.restakeRewards,
+      // ),
+      // (gasLimit) =>
+      //   this.contracts.staking.claimMany(
+      //     allocationIds,
+      //     this.indexerConfigs.restakeRewards,
+      //     {
+      //       gasLimit,
+      //     },
+      //   ),
+      // logger.child({ function: 'staking.claimMany' }),
       // )
       // if (receipt === 'paused' || receipt === 'unauthorized') {
       //   return false

@@ -48,12 +48,12 @@ export class NetworkMonitor {
 
   async currentEpochNumber(): Promise<number> {
     // return (await this.contracts.epochManager.currentEpoch()).toNumber()
-    return 1;
+    return 1
   }
 
   async maxAllocationEpoch(): Promise<number> {
     // return await this.contracts.staking.maxAllocationEpochs()
-    return 1;
+    return 1
   }
 
   async allocation(allocationID: string): Promise<Allocation> {
