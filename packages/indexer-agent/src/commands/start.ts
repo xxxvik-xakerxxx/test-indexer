@@ -6,7 +6,6 @@ import { SequelizeStorage, Umzug } from 'umzug'
 
 import {
   connectContracts,
-  connectDatabase,
   createLogger,
   createMetrics,
   createMetricsServer,
@@ -32,6 +31,7 @@ import {
   NetworkMonitor,
   EpochSubgraph,
   resolveChainId,
+  connectDatabase,
 } from '@graphprotocol/indexer-common'
 import { startAgent } from '../agent'
 import { Indexer } from '../indexer'
@@ -552,7 +552,7 @@ export default {
       rewardsManager: contracts.rewardsManager.address,
       serviceRegistry: contracts.serviceRegistry.address,
       staking: contracts.staking.address,
-      token: contracts.token.address,
+      token: contracts.token?.address,
     })
 
     const indexerAddress = toAddress(argv.indexerAddress)

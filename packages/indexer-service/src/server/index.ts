@@ -160,6 +160,8 @@ export const createApp = async ({
   app.use(cors())
 
   // Security
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   secureExpressApp(app)
 
   // Endpoint for health checks

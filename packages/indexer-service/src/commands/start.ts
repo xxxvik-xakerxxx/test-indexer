@@ -7,7 +7,6 @@ import { parse as yaml_parse } from 'yaml'
 
 import {
   connectContracts,
-  connectDatabase,
   createLogger,
   createMetrics,
   createMetricsServer,
@@ -24,6 +23,7 @@ import {
   Network,
   NetworkSubgraph,
   registerIndexerErrorMetrics,
+  connectDatabase,
 } from '@graphprotocol/indexer-common'
 
 import { createServer } from '../server'
@@ -356,7 +356,7 @@ export default {
       allocations,
       wallet,
       chainId: network.chainId,
-      disputeManagerAddress: contracts.disputeManager.address,
+      disputeManagerAddress: contracts?.disputeManager?.address ?? '',
     })
 
     // Create a query processor for paid queries
