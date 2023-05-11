@@ -1,0 +1,9 @@
+configVersion: 1
+project: "indexer"
+---
+image: agent
+dockerfile: Dockerfile.indexer-agent
+---
+image: service
+dockerfile: Dockerfile.indexer-service
+
