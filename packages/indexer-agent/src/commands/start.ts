@@ -14,7 +14,7 @@ import {
   SubgraphDeploymentID,
   toAddress,
   Logger,
-} from '@graphprotocol/common-ts'
+} from '@tokene-q/common-ts'
 import {
   AllocationReceiptCollector,
   createIndexerManagementClient,
