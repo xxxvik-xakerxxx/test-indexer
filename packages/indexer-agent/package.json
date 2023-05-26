@@ -28,7 +28,6 @@
     "graph-indexer-agent": "bin/graph-indexer-agent"
   },
   "dependencies": {
-    "@graphprotocol/common-ts": "^2.0.1",
     "@graphprotocol/indexer-common": "workspace:^",
     "@thi.ng/heaps": "^1.3.1",
     "@tokene-q/common-ts": "^2.0.4",
