@@ -1172,9 +1172,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graphprotocol/indexer-native@workspace:packages/indexer-native"
   dependencies:
-    "@graphprotocol/common-ts": ^2.0.1
     "@mapbox/node-pre-gyp": 1.0.10
-    "@tokene-q/common-ts": ^2.0.4
     bs58: 5.0.0
     cargo-cp-artifact: 0.1.7
     eslint: 8.13.0

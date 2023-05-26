@@ -1,4 +1,4 @@
-import { Address, SubgraphDeploymentID, toAddress } from '@graphprotocol/common-ts'
+import { Address, SubgraphDeploymentID, toAddress } from '@tokene-q/common-ts'
 import { BigNumber } from 'ethers'
 import { Allocation } from '../allocations'
 import { SubgraphDeployment } from '../types'
