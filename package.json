@@ -30,9 +30,7 @@
     "@ethersproject/bignumber": "5.7.0",
     "@ethersproject/providers": "5.7.0",
     "@urql/core": "2.4.4",
-    "@urql/exchange-execute": "1.2.2",
-    "root": "portal:/Users/lukachisama/Documents/Q/DECENTRALIZED_THE_GRAPH/common-ts",
-    "@graphprotocol/common-ts": "portal:/Users/lukachisama/Documents/Q/DECENTRALIZED_THE_GRAPH/common-ts/packages/common-ts"
+    "@urql/exchange-execute": "1.2.2"
   },
   "overrides": {
     "ethers": "5.7.0",
@@ -45,5 +43,9 @@
   },
   "engines": {
     "node": ">=12.22.0"
+  },
+  "packageManager": "yarn@3.5.1",
+  "dependencies": {
+    "root": "^3.2.0"
   }
 }

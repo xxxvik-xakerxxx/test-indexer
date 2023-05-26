@@ -12,7 +12,7 @@ import {
   createMetricsServer,
   SubgraphDeploymentID,
   toAddress,
-} from '@graphprotocol/common-ts'
+} from '@tokene-q/common-ts'
 import {
   createIndexerManagementClient,
   defineIndexerManagementModels,
@@ -213,7 +213,7 @@ export default {
     const release = {
       version: pkg.version,
       dependencies: {
-        '@graphprotocol/common-ts': dependencies['@graphprotocol/common-ts'],
+        '@tokene-q/common-ts': dependencies['@tokene-q/common-ts'],
       },
     }
 
