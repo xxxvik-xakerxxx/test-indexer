@@ -18,8 +18,6 @@ COPY package.json .
 COPY yarn.lock .
 COPY lerna.json .
 COPY tsconfig.json .
-COPY .yarnrc.yml .
-COPY .yarn/ .
 
 # Copy shared and package files
 COPY packages/indexer-common/ ./packages/indexer-common
@@ -49,7 +47,6 @@ COPY package.json .
 COPY yarn.lock .
 COPY lerna.json .
 COPY tsconfig.json .
-COPY .yarnrc.yml .
 
 # Copy build output
 COPY --from=build /opt/indexer/packages/indexer-common/package.json /opt/indexer/packages/indexer-common/package.json
