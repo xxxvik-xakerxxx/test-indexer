@@ -19,6 +19,7 @@ COPY yarn.lock .
 COPY lerna.json .
 COPY tsconfig.json .
 COPY .yarnrc.yml .
+COPY .yarn/ .
 
 # Copy shared and package files
 COPY packages/indexer-common/ ./packages/indexer-common
