@@ -7,6 +7,8 @@ ENV NODE_ENV production
 
 RUN apt-get update && apt-get install -y python build-essential git curl
 
+RUN echo ${CI_JOB_TOKEN}
+
 # Install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > /tmp/rustup.sh && sh /tmp/rustup.sh -y
 ENV PATH="/root/.cargo/bin:$PATH"
