@@ -6,7 +6,7 @@ FROM node:14-bullseye-slim as build
 ENV NODE_ENV production
 
 RUN apt-get update && apt-get install -y python build-essential git curl
-
+ARG CI_JOB_TOKEN
 RUN echo ${CI_JOB_TOKEN}
 
 # Install Rust
