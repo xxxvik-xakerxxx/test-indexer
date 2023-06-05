@@ -3,7 +3,9 @@ project: "indexer"
 ---
 image: agent
 dockerfile: Dockerfile.indexer-agent
+args: CI_JOB_TOKEN={{ env "CI_JOB_TOKEN" }}
 ---
 image: service
 dockerfile: Dockerfile.indexer-service
+args: CI_JOB_TOKEN={{ env "CI_JOB_TOKEN" }}
 
