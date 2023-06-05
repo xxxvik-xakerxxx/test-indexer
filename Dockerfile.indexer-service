@@ -15,7 +15,7 @@ WORKDIR /opt/indexer
 
 # Copy root files
 COPY package.json .
-COPY yarn.lock .
+COPY .npmrc .
 COPY lerna.json .
 COPY tsconfig.json .
 
@@ -44,7 +44,7 @@ WORKDIR /opt/indexer
 
 # Copy root files
 COPY package.json .
-COPY yarn.lock .
+COPY .npmrc .
 COPY lerna.json .
 COPY tsconfig.json .
 
