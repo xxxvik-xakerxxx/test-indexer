@@ -49,13 +49,11 @@ Build and Publish:
   stage: build-and-publish
   <<: *before_script_templ
   script:
-    - type werf && source $(werf ci-env gitlab --as-file)
-    - werf build --report-path=images-report.json
-    - docker pull $(cat images-report.json | jq -r .Images.agent.DockerImageName)
-    - docker tag $(cat images-report.json | jq -r .Images.agent.DockerImageName) $IMAGE_NAME_AGENT
+    # - type werf && source $(werf ci-env gitlab --as-file)
+    # - werf build --report-path=images-report.json
+    - docker build -f Dockerfile.indexer-agent -t $IMAGE_NAME_AGENT .
     - docker push $IMAGE_NAME_AGENT
-    - docker pull $(cat images-report.json | jq -r .Images.service.DockerImageName)
-    - docker tag $(cat images-report.json | jq -r .Images.service.DockerImageName) $IMAGE_NAME_SERVICE
+    - docker build -f Dockerfile.indexer-agent -t $IMAGE_NAME_SERVICE .
     - docker push $IMAGE_NAME_SERVICE
   except: [schedules]
   interruptible: true
