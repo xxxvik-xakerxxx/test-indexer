@@ -54,7 +54,7 @@ Build and Publish:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -f Dockerfile.indexer-agent -t $IMAGE_NAME_AGENT  --build-arg CI_JOB_TOKEN=$CI_JOB_TOKEN .
     - docker push $IMAGE_NAME_AGENT
-    - docker build -f Dockerfile.indexer-agent -t $IMAGE_NAME_SERVICE --build-arg CI_JOB_TOKEN=$CI_JOB_TOKEN .
+    - docker build -f Dockerfile.indexer-service -t $IMAGE_NAME_SERVICE --build-arg CI_JOB_TOKEN=$CI_JOB_TOKEN .
     - docker push $IMAGE_NAME_SERVICE
   except: [schedules]
   interruptible: true
