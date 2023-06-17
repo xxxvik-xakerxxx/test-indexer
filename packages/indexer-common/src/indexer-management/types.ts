@@ -155,7 +155,9 @@ export function epochElapsedBlocks(networkEpoch: NetworkEpoch): number {
 }
 
 const Caip2ByChainAlias: { [key: string]: string } = {
-  mainnet: 'eip155:1',
+  // FIXME: This is a hack to make the indexer work with the current
+  // Vitiya deployment. We should remove this once we have a proper chain
+  mainnet: 'eip155:3243243243',
   goerli: 'eip155:5',
   gnosis: 'eip155:100',
   hardhat: 'eip155:1337',
